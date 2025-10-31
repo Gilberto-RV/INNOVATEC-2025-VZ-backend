@@ -3,7 +3,8 @@ import User from '../models/Auth.js';
 import jwt from 'jsonwebtoken';
 
 const generateToken = (userId, role) => {
-  return jwt.sign({ userId, role }, process.env.JWT_SECRET || 'clave_secreta', {
+  const jwtSecret = process.env.JWT_SECRET || 'clave_secreta';
+  return jwt.sign({ userId, role }, jwtSecret, {
     expiresIn: '2h',
   });
 };
