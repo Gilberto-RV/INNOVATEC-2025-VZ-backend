@@ -5,13 +5,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "generate-fake-data": "node scripts/generateFakeBigData.js",
+    "generate-fake-data:clear": "node scripts/generateFakeBigData.js --clear",
+    "generate-events": "node scripts/generateSampleEvents.js",
+    "load-buildings": "node scripts/loadBuildingsFromGeoJSON.js",
+    "create-admin": "node scripts/createAdminUser.js",
+    "verify-consistency": "node scripts/verifyDataConsistency.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",

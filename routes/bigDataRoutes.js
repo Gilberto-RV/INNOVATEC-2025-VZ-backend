@@ -18,5 +18,11 @@ router.get('/stats/events', authorizeRoles('administrador'), bigDataController.g
 // Procesamiento por lotes (solo administradores)
 router.post('/batch/process', authorizeRoles('administrador'), bigDataController.runBatchProcessing);
 
+// Predicciones ML (solo administradores)
+import * as mlPredictionController from '../controllers/bigData/mlPredictionController.js';
+router.get('/predict/attendance/:eventId', authorizeRoles('administrador'), mlPredictionController.getAttendancePrediction);
+router.post('/predict/batch', authorizeRoles('administrador'), mlPredictionController.getBatchPredictions);
+router.get('/ml/status', authorizeRoles('administrador'), mlPredictionController.checkMLServiceStatus);
+
 export default router;
 

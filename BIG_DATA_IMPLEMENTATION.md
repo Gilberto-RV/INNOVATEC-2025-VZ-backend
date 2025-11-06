@@ -316,21 +316,62 @@ POST /api/bigdata/batch/process
 
 ---
 
-## 🚀 Próximos Pasos
+## 🚀 Configuración Inicial del Sistema
 
-1. **Instalar dependencias:**
+### 1. Instalar Dependencias
 ```bash
 cd backend
 npm install
 ```
 
-2. **Configurar MongoDB Atlas** (o local)
+### 2. Configurar MongoDB Atlas (o local)
+Ver `MONGODB_ATLAS_SETUP.md` para instrucciones detalladas.
 
-3. **Agregar logging automático** en controladores existentes
+### 3. Configuración Inicial de Datos
+```bash
+# Cargar edificios desde GeoJSON
+npm run load-buildings
 
-4. **Crear dashboard en el frontend** para visualizar datos
+# Generar eventos de ejemplo
+npm run generate-events
 
-5. **Monitorear y ajustar** según necesidades
+# Generar datos de Big Data para visualización
+npm run generate-fake-data:clear
+
+# Verificar consistencia
+npm run verify-consistency
+```
+
+### 4. Crear Usuario Administrador
+```bash
+npm run create-admin
+```
+
+### 5. Acceder al Dashboard
+Navega a `http://localhost:5173/admin/bigdata` y usa las credenciales:
+- Email: `test@gmail.com`
+- Password: `admin123`
+
+## 🎨 Mejoras Recientes del Dashboard
+
+### Visualizaciones Optimizadas
+- **Gráficos horizontales**: Todos los gráficos ahora usan barras horizontales para mejor legibilidad
+- **Nombres truncados**: Los nombres largos se muestran truncados con "..." pero el tooltip muestra el nombre completo
+- **Altura aumentada**: Los gráficos tienen 400px de altura para mejor visualización
+- **Mejor espaciado**: Etiquetas más legibles con tamaño de fuente optimizado
+
+### Interfaz en Español
+- Todas las acciones están traducidas al español
+- Acciones de administrador marcadas con "(Admin)"
+- Tooltips mejorados con información completa
+
+### Scripts Disponibles
+- `npm run generate-events` - Genera eventos de ejemplo
+- `npm run load-buildings` - Carga edificios desde GeoJSON
+- `npm run generate-fake-data` - Genera datos ficticios de Big Data
+- `npm run generate-fake-data:clear` - Limpia y regenera datos
+- `npm run verify-consistency` - Verifica consistencia de datos
+- `npm run create-admin` - Crea/actualiza usuario administrador
 
 ---
 
@@ -339,7 +380,10 @@ npm install
 - ⚠️ Para volúmenes altos (>100K registros/día), considera usar MongoDB Sharding
 - ⚠️ Los logs de actividad crecen rápido, la limpieza semanal es importante
 - ⚠️ En producción, configura índices adicionales según tus consultas
--项目经理: Considera agregar caché (Redis) para consultas frecuentes del dashboard
+- 💡 Considera agregar caché (Redis) para consultas frecuentes del dashboard
+- ✅ **Consistencia de Datos**: Asegúrate de tener eventos reales antes de generar analíticas. Usa `npm run generate-events` primero.
+- ✅ **Edificios**: Los edificios deben cargarse desde GeoJSON usando `npm run load-buildings`
+- ✅ **Verificación**: Usa `npm run verify-consistency` para verificar que todos los datos estén sincronizados
 
 ---
 
