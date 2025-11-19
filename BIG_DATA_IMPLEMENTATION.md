@@ -387,14 +387,20 @@ Navega a `http://localhost:5173/admin/bigdata` y usa las credenciales:
 
 ---
 
-## 🎯 Casos de Uso Futuros para ML
+## 🤖 Integración con Machine Learning
 
-Con estos datos recopilados, podrás implementar:
-- **Predicción de asistencia a eventos**
-- **Recomendación de edificios** basada en historial
-- **Detección de patrones anómalos** (fraude, uso inusual)
-- **Clustering de usuarios** por comportamiento
-- **Optimización de horarios** de eventos
+El servicio ML ya está implementado y utiliza estos datos para:
+- ✅ **Predicción de asistencia a eventos** - Usa EventAnalytics y datos históricos
+- ✅ **Predicción de demanda de movilidad** - Usa BuildingAnalytics y patrones de uso
+- ✅ **Anticipación de saturaciones** - Clasifica niveles de saturación basándose en métricas
+
+**Más información**: Ver `ml-service/README_ML_COMPLETO.md`
+
+### Casos de Uso Futuros para ML:
+- 🔄 **Recomendación de edificios** basada en historial
+- 🔄 **Detección de patrones anómalos** (fraude, uso inusual)
+- 🔄 **Clustering de usuarios** por comportamiento
+- 🔄 **Optimización de horarios** de eventos
 
 ---
 

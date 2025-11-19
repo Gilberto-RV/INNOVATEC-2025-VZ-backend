@@ -49,12 +49,16 @@ El sistema captura automáticamente:
 - **Optimización continua**: Mejorar endpoints lentos y procesos ineficientes
 - **Escalabilidad**: Planificar capacidad según el crecimiento de datos
 
-### Para Futuro (Machine Learning):
-Los datos recopilados son la base para:
-- **Predicción de asistencia a eventos**
-- **Recomendaciones personalizadas de edificios**
-- **Detección de patrones anómalos**
-- **Clustering de usuarios por comportamiento**
+### Integración con Machine Learning:
+Los datos recopilados alimentan el servicio ML que proporciona:
+- ✅ **Predicción de asistencia a eventos** - Implementado
+- ✅ **Predicción de demanda de movilidad** - Implementado
+- ✅ **Anticipación de saturaciones** - Implementado
+- 🔄 **Recomendaciones personalizadas de edificios** - Planificado
+- 🔄 **Detección de patrones anómalos** - Planificado
+- 🔄 **Clustering de usuarios por comportamiento** - Planificado
+
+**Más información**: Ver `ml-service/README_ML_COMPLETO.md`
 
 ---
 
@@ -181,9 +185,10 @@ npm run verify-consistency
 
 Esta implementación es la **fase 1** de un sistema completo de Big Data y Machine Learning. En el futuro se agregará:
 - Procesamiento en tiempo real (streaming)
-- Modelos de Machine Learning para predicciones
+- Re-entrenamiento automático de modelos ML
 - Alertas automáticas basadas en patrones
 - Integración con herramientas de BI externas
+- Sistema de recomendaciones avanzado
 
 ---
 

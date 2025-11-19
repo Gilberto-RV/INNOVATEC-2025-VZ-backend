@@ -1,64 +1,6 @@
 // services/batchProcessingService.js
-import UserActivityLog from '../models/BigData/UserActivityLog.js';
 import BuildingAnalytics from '../models/BigData/BuildingAnalytics.js';
 import EventAnalytics from '../models/BigData/EventAnalytics.js';
-import SystemMetrics from '../models/BigData/SystemMetrics.js';
-
-/**
- * Procesamiento por lotes: Agregar estadísticas diarias de actividad de usuarios
- */
-export const processDailyUserActivity = async () => {
-  try {
-    console.log('🔵 Iniciando procesamiento diario de actividad de usuarios...');
-    
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday.setHours(0, 0, 0, 0);
-    
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Agregar actividades por acción
-    const activitySummary = await UserActivityLog.aggregate([
-      {
-        $match: {
-          timestamp: {
-            $gte: yesterday,
-            $lt: today
-          }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            action: '$action',
-            userRole: '$userRole'
-          },
-          count: { $sum: 1 },
-          uniqueUsers: { $addToSet: '$userId' }
-        }
-      },
-      {
-        $project: {
-          action: '$_id.action',
-          userRole: '$_id.userRole',
-          count: 1,
-          uniqueUsersCount: { $size: '$uniqueUsers' }
-        }
-      }
-    ]);
-
-    console.log(`✅ Procesadas ${activitySummary.length} actividades del día anterior`);
-    return {
-      date: yesterday,
-      summary: activitySummary,
-      processed: true
-    };
-  } catch (error) {
-    console.error('❌ Error en procesamiento diario de actividad:', error);
-    throw error;
-  }
-};
 
 /**
  * Procesamiento por lotes: Consolidar estadísticas de edificios
@@ -176,7 +118,7 @@ export const processEventPopularity = async () => {
 };
 
 /**
- * Procesamiento por lotes: Limpiar datos antiguos (opcional)
+ * Procesamiento por lotes: Limpiar datos antiguos de edificios y eventos
  */
 export const cleanOldData = async (daysToKeep = 90) => {
   try {
@@ -186,23 +128,23 @@ export const cleanOldData = async (daysToKeep = 90) => {
     cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
     const results = {
-      userActivityLogs: 0,
-      systemMetrics: 0
+      buildingAnalytics: 0,
+      eventAnalytics: 0
     };
 
-    // Limpiar logs de actividad antiguos (mantener solo agregaciones)
-    const userLogsResult = await UserActivityLog.deleteMany({
-      timestamp: { $lt: cutoffDate }
+    // Limpiar analíticas de edificios antiguas
+    const buildingResult = await BuildingAnalytics.deleteMany({
+      date: { $lt: cutoffDate }
     });
-    results.userActivityLogs = userLogsResult.deletedCount;
+    results.buildingAnalytics = buildingResult.deletedCount;
 
-    // Limpiar métricas del sistema antiguas
-    const metricsResult = await SystemMetrics.deleteMany({
-      timestamp: { $lt: cutoffDate }
+    // Limpiar analíticas de eventos antiguas
+    const eventResult = await EventAnalytics.deleteMany({
+      date: { $lt: cutoffDate }
     });
-    results.systemMetrics = metricsResult.deletedCount;
+    results.eventAnalytics = eventResult.deletedCount;
 
-    console.log(`✅ Limpieza completada: ${results.userActivityLogs} logs y ${results.systemMetrics} métricas eliminados`);
+    console.log(`✅ Limpieza completada: ${results.buildingAnalytics} analíticas de edificios y ${results.eventAnalytics} analíticas de eventos eliminadas`);
     return results;
   } catch (error) {
     console.error('❌ Error en limpieza de datos:', error);
@@ -218,7 +160,6 @@ export const runBatchProcessing = async () => {
     console.log('🚀 Iniciando procesamiento por lotes completo...');
     
     const results = {
-      userActivity: null,
       buildingAnalytics: null,
       eventPopularity: null,
       cleanup: null,
@@ -226,7 +167,6 @@ export const runBatchProcessing = async () => {
     };
 
     // Ejecutar todos los procesos
-    results.userActivity = await processDailyUserActivity();
     results.buildingAnalytics = await processBuildingAnalytics();
     results.eventPopularity = await processEventPopularity();
     

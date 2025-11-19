@@ -18,10 +18,8 @@ import './models/Categories.js';
 import './models/Event.js';
 
 // Modelos de Big Data
-import './models/BigData/UserActivityLog.js';
 import './models/BigData/BuildingAnalytics.js';
 import './models/BigData/EventAnalytics.js';
-import './models/BigData/SystemMetrics.js';
 
 // Jobs de procesamiento por lotes
 import { startScheduledJobs } from './jobs/batchProcessor.js';

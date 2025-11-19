@@ -9,9 +9,8 @@ export const getDashboardStats = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     
-    // Obtener estadísticas de diferentes fuentes
-    const [userActivity, buildingStats, eventStats] = await Promise.all([
-      bigDataService.getUserActivityStats({ startDate, endDate }),
+    // Obtener estadísticas de edificios y eventos
+    const [buildingStats, eventStats] = await Promise.all([
       bigDataService.getBuildingStats({ startDate, endDate }),
       bigDataService.getEventStats({ startDate, endDate })
     ]);
@@ -19,7 +18,6 @@ export const getDashboardStats = async (req, res) => {
     res.json({
       success: true,
       data: {
-        userActivity,
         buildings: buildingStats,
         events: eventStats,
         period: {
@@ -38,33 +36,6 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
-/**
- * Obtener estadísticas de actividad de usuarios
- */
-export const getUserActivityStats = async (req, res) => {
-  try {
-    const { startDate, endDate, action, userRole } = req.query;
-    
-    const stats = await bigDataService.getUserActivityStats({
-      startDate,
-      endDate,
-      action,
-      userRole
-    });
-
-    res.json({
-      success: true,
-      data: stats
-    });
-  } catch (error) {
-    console.error('Error al obtener estadísticas de usuarios:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener estadísticas de usuarios',
-      error: error.message
-    });
-  }
-};
 
 /**
  * Obtener estadísticas de edificios
