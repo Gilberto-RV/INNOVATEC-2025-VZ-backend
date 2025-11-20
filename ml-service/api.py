@@ -134,7 +134,7 @@ async def root():
     """Endpoint raíz"""
     return {
         "service": "ML Service - INNOVATEC",
-        "status": "running",
+        "status": "ok",
         "models_loaded": {
             "attendance": attendance_model is not None,
             "mobility": mobility_model is not None,
@@ -147,7 +147,7 @@ async def root():
 async def health():
     """Health check"""
     return {
-        "status": "healthy",
+        "status": "ok",
         "models_loaded": {
             "attendance": attendance_model is not None,
             "mobility": mobility_model is not None,

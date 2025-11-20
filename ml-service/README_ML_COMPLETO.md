@@ -1,8 +1,6 @@
-# 🤖 Machine Learning Service - INNOVATEC-2025-VZ
+# 🤖 Machine Learning Service - Guía Completa
 
 Microservicio de Machine Learning para predicciones inteligentes en el sistema INNOVATEC.
-
-> **Nota**: Este es el archivo principal de documentación del ML Service. Para información sobre instalación en Windows, ver `INSTALLACION_WINDOWS.md`. Para iniciar el servicio, usar `start_ml_service.bat` o seguir las instrucciones de inicio rápido a continuación.
 
 ## 📋 Funcionalidades Implementadas
 
@@ -31,27 +29,10 @@ Basándose en patrones históricos de uso.
 
 ---
 
-## 🚀 Inicio Rápido
-
-### Opción 1: Usando el script .bat (Windows)
-```powershell
-cd backend\ml-service
-.\start_ml_service.bat
-```
-
-### Opción 2: Manual
-```powershell
-cd backend\ml-service
-venv\Scripts\activate
-python main.py
-```
-
----
-
-## 📋 Instalación y Configuración
+## 🚀 Instalación y Configuración
 
 ### Requisitos Previos
-- **Python 3.8+** (recomendado: Python 3.12 para mejor compatibilidad)
+- **Python 3.8+**
 - **MongoDB** (debe estar corriendo y accesible)
 - **Node.js** (para el backend principal)
 
