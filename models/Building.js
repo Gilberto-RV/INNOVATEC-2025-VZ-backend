@@ -40,6 +40,7 @@ const BuildingSchema = new mongoose.Schema({
   }],
   bathrooms: bathroomSchema,
   entrances: [entranceSchema],
+  connections: [String],
   id_careers: [{
     type: String,
     ref: 'Career' // Asegúrate de que coincide con el modelo exportado

@@ -37,6 +37,7 @@ La API principal del proyecto maneja usuarios, autenticación, edificios, evento
 - `npm run generate-events` → crea eventos de muestra alineados con lo que usan las analíticas (pruebas unicamente).
 
 - `npm run load-buildings` → importa el GeoJSON de `project/assets/geo/caminos.json` y sincroniza la colección de edificios.
+  - Ahora lee el archivo `project/assets/geo/caminos.json` generado desde `map ITA-V5.geojson` y crea edificios con sus IDs reales; consulta `Cambios de mapa.md` para los detalles de la migración.
 
 - `npm run create-admin` → crea o actualiza el usuario `test@gmail.com` como administrador.
 
