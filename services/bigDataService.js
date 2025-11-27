@@ -144,6 +144,52 @@ export const getBuildingStats = async (filters = {}) => {
 };
 
 /**
+ * Obtener horas pico de edificios con detalles completos
+ */
+export const getBuildingPeakHours = async (filters = {}) => {
+  try {
+    const { startDate, endDate, buildingId, limit = 13 } = filters;
+    const query = {};
+
+    if (startDate || endDate) {
+      query.date = {};
+      if (startDate) query.date.$gte = new Date(startDate);
+      if (endDate) query.date.$lte = new Date(endDate);
+    }
+    if (buildingId) query.buildingId = buildingId;
+
+    // Obtener analíticas recientes con peakHours
+    const analytics = await BuildingAnalytics.find(query)
+      .sort({ date: -1, totalViews: -1 })
+      .limit(parseInt(limit))
+      .select('buildingId buildingName viewCount peakHours date dayOfWeek uniqueVisitors')
+      .lean();
+
+    // Transformar datos para mejor visualización
+    const result = analytics.map(analytic => ({
+      buildingId: analytic.buildingId,
+      buildingName: analytic.buildingName,
+      date: analytic.date,
+      dayOfWeek: analytic.dayOfWeek,
+      totalViews: analytic.viewCount,
+      uniqueVisitors: analytic.uniqueVisitors,
+      peakHours: (analytic.peakHours || [])
+        .sort((a, b) => a.hour - b.hour)
+        .map(ph => ({
+          hour: ph.hour,
+          count: ph.count,
+          label: `${ph.hour.toString().padStart(2, '0')}:00`
+        }))
+    }));
+
+    return result;
+  } catch (error) {
+    console.error('Error al obtener peak hours:', error);
+    throw error;
+  }
+};
+
+/**
  * Obtener estadísticas de eventos
  */
 export const getEventStats = async (filters = {}) => {

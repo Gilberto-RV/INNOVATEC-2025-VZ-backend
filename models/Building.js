@@ -46,6 +46,14 @@ const BuildingSchema = new mongoose.Schema({
   }],
   subjects: [subjectSchema],
   last_updated: Date
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Virtual para el campo 'id' que devuelve el _id
+BuildingSchema.virtual('id').get(function() {
+  return this._id;
 });
 
 export default mongoose.model('Building', BuildingSchema, 'buildings');

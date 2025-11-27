@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,8 +11,16 @@
     "generate-fake-data:clear": "node scripts/generateFakeBigData.js --clear",
     "generate-events": "node scripts/generateSampleEvents.js",
     "load-buildings": "node scripts/loadBuildingsFromGeoJSON.js",
+    "load-buildings-modular": "node scripts/loadBuildingsModular.js",
+    "clean-and-setup": "node scripts/cleanAndSetup13Buildings.js",
     "create-admin": "node scripts/createAdminUser.js",
-    "verify-consistency": "node scripts/verifyDataConsistency.js"
+    "verify-consistency": "node scripts/verifyDataConsistency.js",
+    "verify-peak-hours": "node scripts/verifyPeakHours.js",
+    "test-peak-endpoint": "node scripts/testPeakHoursEndpoint.js",
+    "verify-bigdata": "node scripts/verifyBigDataSystem.js",
+    "ml:verify": "cd ml-service && python verify_ml_setup.py",
+    "ml:train": "cd ml-service && python train_all_models.py",
+    "ml:start": "cd ml-service && python main.py"
   },
   "keywords": [],
   "author": "",

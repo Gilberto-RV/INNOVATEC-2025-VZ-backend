@@ -13,6 +13,7 @@ router.use(authMiddleware);
 router.get('/dashboard', authorizeRoles('administrador'), bigDataController.getDashboardStats);
 router.get('/stats/buildings', authorizeRoles('administrador'), bigDataController.getBuildingStats);
 router.get('/stats/events', authorizeRoles('administrador'), bigDataController.getEventStats);
+router.get('/buildings/peak-hours', authorizeRoles('administrador'), bigDataController.getBuildingPeakHours);
 
 // Procesamiento por lotes (solo administradores)
 router.post('/batch/process', authorizeRoles('administrador'), bigDataController.runBatchProcessing);

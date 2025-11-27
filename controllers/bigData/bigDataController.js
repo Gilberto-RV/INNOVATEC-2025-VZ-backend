@@ -65,6 +65,34 @@ export const getBuildingStats = async (req, res) => {
 };
 
 /**
+ * Obtener horas pico de edificios
+ */
+export const getBuildingPeakHours = async (req, res) => {
+  try {
+    const { startDate, endDate, buildingId, limit } = req.query;
+    
+    const peakHoursData = await bigDataService.getBuildingPeakHours({
+      startDate,
+      endDate,
+      buildingId,
+      limit
+    });
+
+    res.json({
+      success: true,
+      data: peakHoursData
+    });
+  } catch (error) {
+    console.error('Error al obtener horas pico:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener horas pico',
+      error: error.message
+    });
+  }
+};
+
+/**
  * Obtener estadísticas de eventos
  */
 export const getEventStats = async (req, res) => {

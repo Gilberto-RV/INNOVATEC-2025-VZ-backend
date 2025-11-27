@@ -290,17 +290,32 @@ async function generateBuildingAnalytics(startDate, endDate) {
       const profesores = Math.floor(uniqueVisitors * randomFloat(0.1, 0.2));
       const administradores = Math.floor(uniqueVisitors * randomFloat(0.05, 0.1));
       
-      // Generar horas pico
+      // Generar horas pico - MEJORADO para tener datos más completos
       const peakHours = [];
+      const viewsPerHour = {}; // Objeto para acumular vistas por hora
+      
+      // Distribuir las vistas entre las horas del día de forma realista
       for (let h = 0; h < 24; h++) {
         const hourWeight = getActivityWeight(h);
-        if (Math.random() < hourWeight * 0.3) {
-          peakHours.push({
-            hour: h,
-            count: Math.floor(randomInt(1, Math.floor(viewCount * hourWeight)))
-          });
+        const hourViews = Math.floor(viewCount * (hourWeight / 10)); // Distribuir proporcionalmente
+        
+        if (hourViews > 0) {
+          viewsPerHour[h] = hourViews;
         }
       }
+      
+      // Convertir a array y agregar solo las horas con actividad significativa
+      Object.entries(viewsPerHour).forEach(([hour, count]) => {
+        if (count > 0) {
+          peakHours.push({
+            hour: parseInt(hour),
+            count: count
+          });
+        }
+      });
+      
+      // Ordenar por hora para mejor visualización
+      peakHours.sort((a, b) => a.hour - b.hour);
       
       const date = new Date(currentDate);
       date.setHours(0, 0, 0, 0);
