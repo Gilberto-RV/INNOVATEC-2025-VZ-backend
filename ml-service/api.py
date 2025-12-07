@@ -52,11 +52,20 @@ def load_mobility_model():
     metadata_path = f'{MODELS_DIR}/mobility_demand_predictor_metadata.json'
     
     if os.path.exists(model_path):
-        mobility_model = joblib.load(model_path)
+        loaded_data = joblib.load(model_path)
+        
+        # El modelo de movilidad se guarda como un dict con 'model' y 'label_encoder'
+        if isinstance(loaded_data, dict) and 'model' in loaded_data:
+            mobility_model = loaded_data['model']
+            print(f'✅ Modelo de movilidad cargado (con label_encoder): {model_path}')
+        else:
+            # Si es solo el modelo directamente
+            mobility_model = loaded_data
+            print(f'✅ Modelo de movilidad cargado: {model_path}')
+        
         if os.path.exists(metadata_path):
             with open(metadata_path, 'r') as f:
                 mobility_metadata = json.load(f)
-        print(f'✅ Modelo de movilidad cargado: {model_path}')
     else:
         print(f'⚠️  Modelo de movilidad no encontrado en {model_path}')
 
@@ -211,8 +220,19 @@ async def predict_attendance(request: AttendancePredictionRequest):
         # Asegurar que la predicción no sea negativa
         prediction = max(0, int(prediction))
         
-        # Calcular confianza
-        confidence = min(1.0, max(0.0, 0.7))
+        # Calcular confianza basada en las predicciones de los árboles individuales
+        # Menor desviación estándar = mayor confianza
+        tree_predictions = np.array([tree.predict(features)[0] for tree in attendance_model.estimators_])
+        prediction_std = np.std(tree_predictions)
+        prediction_mean = np.mean(tree_predictions)
+        
+        # Calcular coeficiente de variación (std/mean) y convertir a confianza
+        # CV bajo = alta confianza, CV alto = baja confianza
+        if prediction_mean > 0:
+            cv = prediction_std / prediction_mean
+            confidence = max(0.5, min(0.99, 1.0 - (cv * 0.5)))  # Escalar CV a confianza
+        else:
+            confidence = 0.5
         
         return PredictionResponse(
             prediction=prediction,
@@ -274,7 +294,13 @@ async def predict_mobility(request: MobilityPredictionRequest):
         features = np.array([[features_dict[f] for f in features_order]])
         prediction = mobility_model.predict(features)[0]
         prediction = max(0, int(prediction))
-        confidence = min(1.0, max(0.0, 0.7))
+        
+        # Calcular confianza basada en probabilidades del clasificador
+        if hasattr(mobility_model, 'predict_proba'):
+            probas = mobility_model.predict_proba(features)[0]
+            confidence = float(max(probas))  # La probabilidad de la clase predicha
+        else:
+            confidence = 0.7
         
         return PredictionResponse(
             prediction=prediction,

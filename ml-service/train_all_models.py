@@ -57,14 +57,16 @@ def train_attendance_model():
             X, y, test_size=0.2, random_state=42
         )
         
-        # Entrenar
-        print('🎯 Entrenando modelo...')
+        # Entrenar con hiperparámetros mejorados
+        print('🎯 Entrenando modelo con hiperparámetros optimizados...')
         model = RandomForestRegressor(
-            n_estimators=100,
-            max_depth=10,
+            n_estimators=200,           # Más árboles para mejor precisión
+            max_depth=15,               # Mayor profundidad para capturar patrones complejos
             random_state=42,
-            min_samples_split=5,
-            min_samples_leaf=2
+            min_samples_split=4,        # Ajustado para mejor generalización
+            min_samples_leaf=2,
+            max_features='sqrt',        # Mejor selección de features
+            n_jobs=-1                   # Usar todos los cores disponibles
         )
         model.fit(X_train, y_train)
         
@@ -90,9 +92,12 @@ def train_attendance_model():
             'r2_score': float(r2),
             'mse': float(mse),
             'hyperparameters': {
-                'n_estimators': 100,
-                'max_depth': 10,
-                'random_state': 42
+                'n_estimators': 200,
+                'max_depth': 15,
+                'random_state': 42,
+                'min_samples_split': 4,
+                'min_samples_leaf': 2,
+                'max_features': 'sqrt'
             }
         }
         
@@ -143,13 +148,17 @@ def train_mobility_model():
             X, y_encoded, test_size=0.2, random_state=42
         )
         
-        # Entrenar
-        print('🎯 Entrenando modelo...')
+        # Entrenar con hiperparámetros mejorados
+        print('🎯 Entrenando modelo con hiperparámetros optimizados...')
         model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=10,
+            n_estimators=200,
+            max_depth=15,
             random_state=42,
-            class_weight='balanced'
+            class_weight='balanced',
+            min_samples_split=4,
+            min_samples_leaf=2,
+            max_features='sqrt',
+            n_jobs=-1
         )
         model.fit(X_train, y_train)
         
@@ -178,10 +187,13 @@ def train_mobility_model():
             'n_samples': len(df),
             'accuracy': float(accuracy),
             'hyperparameters': {
-                'n_estimators': 100,
-                'max_depth': 10,
+                'n_estimators': 200,
+                'max_depth': 15,
                 'random_state': 42,
-                'class_weight': 'balanced'
+                'class_weight': 'balanced',
+                'min_samples_split': 4,
+                'min_samples_leaf': 2,
+                'max_features': 'sqrt'
             }
         }
         
@@ -229,13 +241,17 @@ def train_saturation_model():
             X, y, test_size=0.2, random_state=42
         )
         
-        # Entrenar
-        print('🎯 Entrenando modelo...')
+        # Entrenar con hiperparámetros mejorados
+        print('🎯 Entrenando modelo con hiperparámetros optimizados...')
         model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=10,
+            n_estimators=200,
+            max_depth=15,
             random_state=42,
-            class_weight='balanced'
+            class_weight='balanced',
+            min_samples_split=4,
+            min_samples_leaf=2,
+            max_features='sqrt',
+            n_jobs=-1
         )
         model.fit(X_train, y_train)
         
@@ -268,10 +284,13 @@ def train_saturation_model():
             'n_samples': len(df),
             'accuracy': float(accuracy),
             'hyperparameters': {
-                'n_estimators': 100,
-                'max_depth': 10,
+                'n_estimators': 200,
+                'max_depth': 15,
                 'random_state': 42,
-                'class_weight': 'balanced'
+                'class_weight': 'balanced',
+                'min_samples_split': 4,
+                'min_samples_leaf': 2,
+                'max_features': 'sqrt'
             }
         }
         

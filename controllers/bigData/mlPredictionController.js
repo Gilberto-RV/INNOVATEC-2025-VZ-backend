@@ -144,6 +144,8 @@ export const getBatchPredictions = async (req, res) => {
  * Predecir demanda de movilidad para un edificio
  */
 export const getMobilityPrediction = async (req, res) => {
+  let analytics = null; // Declarar fuera del try para acceso en catch
+  
   try {
     const { buildingId } = req.params;
     const { date } = req.query; // Fecha opcional (YYYY-MM-DD)
@@ -161,7 +163,7 @@ export const getMobilityPrediction = async (req, res) => {
     const targetDate = date ? new Date(date) : new Date();
     targetDate.setHours(0, 0, 0, 0);
     
-    const analytics = await BuildingAnalytics.findOne({
+    analytics = await BuildingAnalytics.findOne({
       buildingId,
       date: targetDate
     });
@@ -194,13 +196,15 @@ export const getMobilityPrediction = async (req, res) => {
     };
 
     // Obtener predicción del ML Service
+    console.log('🔍 Datos para predicción:', predictionData);
     const prediction = await mlService.predictMobilityDemand(predictionData);
+    console.log('✅ Predicción recibida:', prediction);
 
     res.json({
       success: true,
       data: {
         buildingId,
-        buildingName: building.name,
+        buildingName: building._id || building.name || buildingId,
         date: targetDate.toISOString(),
         prediction: prediction.prediction,
         confidence: prediction.confidence,
@@ -210,11 +214,33 @@ export const getMobilityPrediction = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error obteniendo predicción de movilidad:', error);
+    console.error('❌ Error obteniendo predicción de movilidad:', error);
+    console.error('   BuildingId:', req.params.buildingId);
+    console.error('   Message:', error.message);
+    console.error('   Stack:', error.stack);
+    
+    // Error más específico
+    let errorMessage = 'Error al obtener predicción de movilidad';
+    if (error.code === 'ECONNREFUSED') {
+      errorMessage = 'ML Service no está disponible. Por favor, inicia el servicio ML (python main.py)';
+    } else if (error.response?.status === 503) {
+      errorMessage = 'Modelo de movilidad no está entrenado. Ejecuta: python train_all_models.py';
+    }
+    
     res.status(500).json({
       success: false,
-      message: 'Error al obtener predicción de movilidad',
-      error: error.message
+      message: errorMessage,
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      details: {
+        buildingId: req.params.buildingId,
+        hasAnalytics: !!analytics,
+        analyticsData: analytics ? {
+          viewCount: analytics.viewCount,
+          uniqueVisitors: analytics.uniqueVisitors,
+          peakHoursCount: analytics.peakHours?.length || 0
+        } : null
+      }
     });
   }
 };

@@ -281,9 +281,9 @@ async function generateBuildingAnalytics(startDate, endDate) {
       const dayOfWeek = currentDate.getDay();
       const dayWeight = getDayWeight(dayOfWeek);
       
-      // Generar vistas para este edificio en este día
-      const viewCount = Math.floor(randomInt(10, 150) * dayWeight);
-      const uniqueVisitors = Math.floor(viewCount * randomFloat(0.3, 0.7));
+      // Generar vistas para este edificio en este día (escalado para datos más realistas)
+      const viewCount = Math.floor(randomInt(50, 500) * dayWeight);
+      const uniqueVisitors = Math.floor(viewCount * randomFloat(0.4, 0.8));
       
       // Distribuir visitantes por rol
       const estudiantes = Math.floor(uniqueVisitors * randomFloat(0.6, 0.8));
@@ -372,24 +372,24 @@ async function generateEventAnalytics(startDate, endDate) {
         viewMultiplier = randomFloat(0.3, 0.7); // Menos popular si está muy lejos
       }
       
-      const viewCount = Math.floor(randomInt(5, 80) * dayWeight * viewMultiplier);
-      const uniqueVisitors = Math.floor(viewCount * randomFloat(0.4, 0.8));
+      const viewCount = Math.floor(randomInt(100, 800) * dayWeight * viewMultiplier);
+      const uniqueVisitors = Math.floor(viewCount * randomFloat(0.5, 0.85));
       
       // Calcular popularidad score
       const popularityScore = Math.min(100, Math.floor(
-        (viewCount * 0.4) + 
-        (uniqueVisitors * 0.3) + 
+        (viewCount * 0.2) + 
+        (uniqueVisitors * 0.25) + 
         (daysUntilEvent <= 7 ? 20 : 0) +
-        randomInt(0, 20)
+        randomInt(0, 25)
       ));
       
-      // Predicción de asistencia (basada en vistas)
-      const attendancePrediction = Math.floor(uniqueVisitors * randomFloat(0.3, 0.6));
+      // Predicción de asistencia (basada en vistas) - más realista
+      const attendancePrediction = Math.floor(uniqueVisitors * randomFloat(0.4, 0.8));
       
       // Si el evento ya pasó, agregar asistencia real
       let actualAttendance = null;
       if (event.date_time < currentDate && event.status === 'finalizado') {
-        actualAttendance = Math.floor(attendancePrediction * randomFloat(0.8, 1.2));
+        actualAttendance = Math.floor(attendancePrediction * randomFloat(0.85, 1.15));
       }
       
       const date = new Date(currentDate);
